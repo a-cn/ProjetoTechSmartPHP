@@ -1,0 +1,131 @@
+
+
+    /* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+    margin-top: 20px;
+}
+
+.search-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.search-container form {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.search-container input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    margin-right: 10px;
+    width: 250px;
+    box-sizing: border-box;
+}
+
+.search-container button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.search-container button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+td {
+    background-color: #f9f9f9;
+}
+
+td a {
+    text-decoration: none;
+}
+
+/* Botões de Ação */
+.btn {
+    padding: 8px 15px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-block;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+}
+
+/* Estilo de ícones */
+.bi {
+    margin-right: 5px;
+}
+
+/* Mobile - Ajuste da tabela */
+@media (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    .search-container input[type="text"] {
+        width: 200px;
+    }
+}
