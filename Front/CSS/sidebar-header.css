@@ -1,0 +1,127 @@
+/* Reset básico */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Cabeçalho superior */
+.topbar {
+    background-color: #004b87;
+    color: white;
+    padding: 12px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    height: 50px;
+}
+
+.menu-icon {
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 20px;
+}
+
+/* Contêiner com as informações de usuário */
+.user-info {
+    margin-left: auto;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    color: white;
+}
+
+/* Contêiner com o tipo de usuário e tempo de sessão */
+.user-session-box {
+    display: flex;
+    flex-direction: column;
+    text-align: right;
+    line-height: 1.2;
+}
+
+/* Descrição do tipo de usuário */
+.user-role {
+    font-weight: bold;
+    font-size: 0.95em;
+}
+
+/* Contador de inatividade */
+#session-timer {
+    font-size: 0.85em;
+    color: #ccc;
+}
+
+.logout-btn {
+    background-color: #006bb3;
+    color: white;
+    padding: 6px 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.logout-btn:hover {
+    background-color: #005792;
+}
+
+/* Sidebar lateral */
+.sidebar {
+    position: fixed;
+    top: 50px; /* abaixo do cabeçalho */
+    left: -220px;
+    width: 220px;
+    height: 100%;
+    background-color: #2c3e50;
+    transition: left 0.3s ease;
+    padding-top: 20px;
+    z-index: 999;
+}
+
+.sidebar.active {
+    left: 0;
+}
+
+.sidebar ul {
+    list-style-type: none;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: white;
+    text-decoration: none;
+    transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background-color: #34495e;
+}
+
+/* Conteúdo principal */
+.main-content {
+    margin-top: 50px;
+    padding: 20px;
+    transition: margin-left 0.3s ease;
+}
+
+.main-content.shifted {
+    margin-left: 220px;
+}
+
+/* Garante que o conteúdo da página comece abaixo do cabeçalho */
+body {
+    padding-left: 0;
+    padding-top: 50px; /* mesma altura do .topbar */
+}

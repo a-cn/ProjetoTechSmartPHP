@@ -1,0 +1,114 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #fff;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.titulo-fornecedores {
+  background-color: #007bff;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+h2 {
+  color: #333;
+}
+
+.form-container {
+  margin-bottom: 40px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+button {
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.btn-incluir {
+  background-color: #28a745;
+}
+
+.btn-pesquisar {
+  background-color: #17a2b8;
+}
+
+.btn-selecionar-todos {
+  background-color: #6c757d;
+}
+
+.btn-imprimir {
+  background-color: #ffc107;
+}
+
+.acoes button {
+  margin-right: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+}
+
+.acoes button.editar {
+  background-color: #ffc107;
+}
+
+.acoes button.excluir {
+  background-color: #dc3545;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+th {
+  background-color: #f8f9fa;
+}
+
+tr:hover {
+  background-color: #f1f1f1;
+}
+
+#buscarCep {
+  width: auto;
+  margin-top: 5px;
+  background-color: #17a2b8;
+}

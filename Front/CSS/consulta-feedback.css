@@ -1,0 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+}
+    
+table {
+    border-collapse: collapse;
+    width: 80%; /* Reduzindo a largura da tabela */
+    margin: auto; /* Centralizando a tabela */
+    margin-top: 10px;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center; /* Centralizando o texto */
+}
+th {
+    background-color: rgb(52, 243, 138); /* Cabeçalho verde claro */
+    color: black;
+}
+tr:hover {
+    background-color: #f9f9f9;
+}
+button {
+    padding: 5px 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px; /* Melhorando a aparência dos botões */
+    margin: 5px; /* Adicionando espaçamento entre os botões */
+}
+button:hover {
+    background-color: #45a049;
+}
+.btn-delete {
+    background-color: #ff4c4c;
+}
+.btn-delete:hover {
+    background-color: #ff1a1a;
+}
+.btn-edit {
+    background-color: #FFA500;
+}
+.btn-edit:hover {
+    background-color: #FF8C00;
+}
+.h1 {
+    background-color: #003366;
+        color:white ;
+        padding: 20px;
+        text-align: center;
+        font-size: 24px;
+        margin-top: 10px;
+ 
+}
+.action-buttons {
+    display: flex;
+    justify-content: center; /* Centralizando os botões */
+    gap: 10px; /* Adicionando espaçamento entre os botões */
+}

@@ -1,0 +1,1 @@
+//Arquivo criado para caso seja utilizado JavaScript na página de Cadastro de Produto
