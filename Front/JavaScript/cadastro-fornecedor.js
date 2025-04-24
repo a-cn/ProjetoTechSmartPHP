@@ -1,237 +1,135 @@
-let fornecedores = [];
-let idCounter = 1;
-
+//Trata do cadastro de fornecedores:
 document.getElementById('formFornecedor').addEventListener('submit', function (e) {
   e.preventDefault();
 
-  const nome = document.getElementById('nome').value;
-  const email = document.getElementById('email').value;
-  const cnpj = document.getElementById('cnpj').value;
-  const telefone = document.getElementById('telefone').value;
-  const celular = document.getElementById('celular').value;
-  const cep = document.getElementById('cep').value;
-  const endereco = document.getElementById('endereco').value;
-  const numero = document.getElementById('numero').value;
-  const complemento = document.getElementById('complemento').value;
-  const bairro = document.getElementById('bairro').value;
-  const cidade = document.getElementById('cidade').value;
-  const estado = document.getElementById('estado').value;
-  const situacao = document.getElementById('situacao').value;
+  const formData = new FormData(this);
 
-  const fornecedor = {
-    id: idCounter++,
-    nome,
-    email,
-    cnpj,
-    telefone,
-    celular,
-    cep,
-    endereco,
-    numero,
-    complemento,
-    bairro,
-    cidade,
-    estado,
-    situacao,
-    selecionado: false,
-  };
-
-  fornecedores.push(fornecedor);
-  atualizarTabela();
-  limparFormulario();
+  fetch('../../Back/cadastro_fornecedor.php', {
+    method: 'POST',
+    body: formData
+  })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        alert('Fornecedor cadastrado com sucesso!');
+        this.reset();
+      } else {
+        alert('Erro ao cadastrar fornecedor: ' + (data.error || 'Erro desconhecido'));
+        console.error(data);
+      }
+    })
+    .catch(error => {
+      console.error('Erro na requisição:', error);
+      alert('Erro na requisição. Veja o console.');
+    });
 });
 
-function atualizarTabela() {
-  const tbody = document.querySelector('#tabelaFornecedores tbody');
-  tbody.innerHTML = '';
-
-  fornecedores.forEach(fornecedor => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td><input type="checkbox" ${fornecedor.selecionado ? 'checked' : ''} onchange="selecionarFornecedor(${fornecedor.id})"></td>
-      <td>${fornecedor.id}</td>
-      <td>${fornecedor.nome}</td>
-      <td>${fornecedor.endereco}, ${fornecedor.numero}, ${fornecedor.bairro}, ${fornecedor.cidade}-${fornecedor.estado}</td>
-      <td>${fornecedor.situacao}</td>
-      <td class="acoes">
-        <button class="editar" onclick="editarFornecedor(${fornecedor.id})">Editar</button>
-        <button class="excluir" onclick="excluirFornecedor(${fornecedor.id})">Excluir</button>
-      </td>
-    `;
-    tbody.appendChild(row);
-  });
-}
-
-function limparFormulario() {
-  document.getElementById('formFornecedor').reset();
-}
-
-function editarFornecedor(id) {
-  const fornecedor = fornecedores.find(f => f.id === id);
-  if (fornecedor) {
-    document.getElementById('nome').value = fornecedor.nome;
-    document.getElementById('email').value = fornecedor.email;
-    document.getElementById('cnpj').value = fornecedor.cnpj;
-    document.getElementById('telefone').value = fornecedor.telefone;
-    document.getElementById('celular').value = fornecedor.celular;
-    document.getElementById('cep').value = fornecedor.cep;
-    document.getElementById('endereco').value = fornecedor.endereco;
-    document.getElementById('numero').value = fornecedor.numero;
-    document.getElementById('complemento').value = fornecedor.complemento;
-    document.getElementById('bairro').value = fornecedor.bairro;
-    document.getElementById('cidade').value = fornecedor.cidade;
-    document.getElementById('estado').value = fornecedor.estado;
-    document.getElementById('situacao').value = fornecedor.situacao;
-
-    fornecedores = fornecedores.filter(f => f.id !== id);
-    atualizarTabela();
-  }
-}
-
-function excluirFornecedor(id) {
-  fornecedores = fornecedores.filter(f => f.id !== id);
-  atualizarTabela();
-}
-
-function selecionarFornecedor(id) {
-  const fornecedor = fornecedores.find(f => f.id === id);
-  if (fornecedor) {
-    fornecedor.selecionado = !fornecedor.selecionado;
-  }
-}
-
-function selecionarTodos() {
-  const todosSelecionados = fornecedores.every(f => f.selecionado);
-  fornecedores.forEach(f => f.selecionado = !todosSelecionados);
-  atualizarTabela();
-}
-
-function pesquisarFornecedor() {
-  const termo = document.getElementById('pesquisar').value.toLowerCase();
-  const resultados = fornecedores.filter(fornecedor =>
-    fornecedor.nome.toLowerCase().includes(termo)
-  );
-
-  if (resultados.length === 0) {
-    alert("Fornecedor não localizado.");
-  } else {
-    atualizarTabela(resultados);
-  }
-}
-
-function imprimirSelecionados() {
-  const selecionados = fornecedores.filter(f => f.selecionado);
-  if (selecionados.length === 0) {
-    alert("Nenhum fornecedor selecionado para impressão.");
-    return;
-  }
-
-  const printWindow = window.open('', '', 'width=800,height=600');
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Imprimir Fornecedores</title>
-        <style>
-          table { width: 100%; border-collapse: collapse; }
-          th, td { border: 1px solid #000; padding: 8px; text-align: left; }
-        </style>
-      </head>
-      <body>
-        <h1>Fornecedores Selecionados</h1>
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>NOME</th>
-              <th>E-MAIL</th>
-              <th>CPF/CNPJ</th>
-              <th>TELEFONE</th>
-              <th>CELULAR</th>
-              <th>CEP</th>
-              <th>ENDEREÇO</th>
-              <th>NÚMERO</th>
-              <th>COMPLEMENTO</th>
-              <th>BAIRRO</th>
-              <th>CIDADE</th>
-              <th>ESTADO</th>
-              <th>SITUAÇÃO</th>
-            </tr>
-          </thead>
-          <tbody>
-            ${selecionados.map(f => `
-              <tr>
-                <td>${f.id}</td>
-                <td>${f.nome}</td>
-                <td>${f.email}</td>
-                <td>${f.cnpj}</td>
-                <td>${f.telefone}</td>
-                <td>${f.celular}</td>
-                <td>${f.cep}</td>
-                <td>${f.endereco}</td>
-                <td>${f.numero}</td>
-                <td>${f.complemento}</td>
-                <td>${f.bairro}</td>
-                <td>${f.cidade}</td>
-                <td>${f.estado}</td>
-                <td>${f.situacao}</td>
-              </tr>
-            `).join('')}
-          </tbody>
-        </table>
-      </body>
-    </html>
-  `);
-  printWindow.document.close();
-  printWindow.print();
-}
-
+//Trata da busca pelo CEP no formulário de cadastro:
 document.getElementById('buscarCep').addEventListener('click', function () {
   const cep = document.getElementById('cep').value.replace(/\D/g, '');
+
   if (cep.length !== 8) {
-    alert("CEP inválido.");
+    alert('CEP inválido!');
     return;
   }
 
   fetch(`https://viacep.com.br/ws/${cep}/json/`)
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
       if (data.erro) {
-        alert("CEP não encontrado.");
-      } else {
-        document.getElementById('endereco').value = data.logradouro;
-        document.getElementById('bairro').value = data.bairro;
-        document.getElementById('cidade').value = data.localidade;
-        document.getElementById('estado').value = data.uf;
+        alert('CEP não encontrado!');
+        return;
       }
+
+      document.getElementById('logradouro').value = data.logradouro || '';
+      document.getElementById('bairro').value = data.bairro || '';
+      document.getElementById('cidade').value = data.localidade || '';
+      document.getElementById('estado').value = data.estado || '';
     })
-    .catch(() => alert("Erro ao buscar CEP."));
+    .catch(() => alert('Erro ao buscar o CEP.'));
 });
 
-// Auto-formatação dos campos
-document.getElementById('cnpj').addEventListener('input', function (e) {
-  let value = e.target.value.replace(/\D/g, '');
-  if (value.length > 14) value = value.slice(0, 14);
-  value = value.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})$/, '$1.$2.$3/$4-$5');
-  e.target.value = value;
-});
+//Trata da listagem de registros na tela:
+function carregarFornecedores() {
+  fetch('../../Back/controlador_fornecedor.php', {
+    method: 'POST',
+    body: new URLSearchParams({ action: 'read' })
+  })
+  .then(res => res.json())
+  .then(fornecedores => {
+    const tbody = document.querySelector('#tabelaFornecedores tbody');
+    tbody.innerHTML = ''; //Limpa a tabela
 
-document.getElementById('telefone').addEventListener('input', function (e) {
-  let value = e.target.value.replace(/\D/g, '');
-  if (value.length > 11) value = value.slice(0, 11);
-  value = value.replace(/^(\d{2})(\d{4,5})(\d{4})$/, '($1) $2-$3');
-  e.target.value = value;
-});
+    fornecedores.forEach(f => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input type="checkbox" class="selecionar-fornecedor" data-id="${f.fornecedor_id}"></td>
+        <td>${f.cpf_cnpj}</td>
+        <td>${f.nome}</td>
+        <td>${f.endereco}</td>
+        <td>
+          ${f.email}<br>
+          ${f.num_principal}
+          ${f.num_secundario ? '<br>' + f.num_secundario : ''}
+        </td>
+        <td>${f.situacao}</td>
+        <td>
+          <button onclick="arquivarFornecedor(${f.fornecedor_id})">Arquivar</button>
+          <button onclick="excluirFornecedor(${f.fornecedor_id})">Excluir</button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  })
+  .catch(error => console.error('Erro ao carregar fornecedores:', error));
+}
+window.addEventListener('DOMContentLoaded', carregarFornecedores); //Chama a função para carregar os componentes ao acessar a página
 
-document.getElementById('celular').addEventListener('input', function (e) {
-  let value = e.target.value.replace(/\D/g, '');
-  if (value.length > 11) value = value.slice(0, 11);
-  value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
-  e.target.value = value;
-});
+//Trata da exclusão lógica do registro (arquivamento):
+function arquivarFornecedor(id) {
+  if (!confirm('Deseja arquivar este fornecedor?')) return;
 
-document.getElementById('cep').addEventListener('input', function (e) {
-  let value = e.target.value.replace(/\D/g, '');
-  if (value.length > 8) value = value.slice(0, 8);
-  value = value.replace(/^(\d{5})(\d{3})$/, '$1-$2');
-  e.target.value = value;
-});
+  fetch('../../Back/controlador_fornecedor.php', {
+    method: 'POST',
+    body: new URLSearchParams({ action: 'arquivar', id })
+  })
+  .then(res => res.json())
+  .then(result => {
+    if (result.success) {
+      alert('Fornecedor arquivado com sucesso!');
+      carregarFornecedores(); //Atualiza a lista
+    } else {
+      alert('Erro ao arquivar fornecedor.');
+    }
+  })
+  .catch(error => console.error('Erro ao arquivar fornecedor:', error));
+}
+
+//Trata da exclusão física (definitiva) do registro:
+function excluirFornecedor(id) {
+  if (!confirm('Tem certeza que deseja excluir permanentemente este fornecedor e endereço associado? Essa ação não poderá ser desfeita.')) {
+    return;
+  }
+
+  fetch('../../Back/controlador_fornecedor.php', {
+    method: 'POST',
+    body: new URLSearchParams({
+      action: 'excluir',
+      id: id
+    })
+  })
+  .then(res => res.json())
+  .then(result => {
+    if (result.success) {
+      alert('Fornecedor e endereço excluídos com sucesso!');
+      carregarFornecedores(); //Atualiza a tabela com os dados atualizados
+    } else {
+      alert('Erro ao excluir fornecedor: ' + (result.error || 'Erro desconhecido.'));
+      console.error(result);
+    }
+  })
+  .catch(error => {
+    alert('Erro na requisição. Veja o console para mais detalhes.');
+    console.error('Erro na exclusão:', error);
+  });
+}

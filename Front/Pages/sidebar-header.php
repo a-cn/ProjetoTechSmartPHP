@@ -41,7 +41,7 @@ $loginTimestamp = $_SESSION['login_timestamp'] ?? null;
             <li><a href="dados-usuario.php">Minha Conta</a></li> <!-- Inserir aqui o caminho para a página de dados do usuário (perfil) -->
             
             <?php if (mostrarSeAdmin()): ?>
-                <li><a href="cadastro-usuario.php">Usuários</a></li> <!-- Alterar aqui o caminho para a página de listagem de usuários -->
+                <li><a href="listagem-usuarios.php">Usuários</a></li>
             <?php endif; ?>
 
             <?php if (esconderSeCliente()): ?>
@@ -60,13 +60,17 @@ $loginTimestamp = $_SESSION['login_timestamp'] ?? null;
                 <li><a href="cadastro-produto.php">Produtos</a></li>
             <?php endif; ?>
             
-            <li><a href="consulta-pedido.php">Histórico de Pedidos</a></li> <!-- Inserir aqui o caminho para a página de histórico (listagem) de pedidos -->
+            <li><a href="historico_pedidos.php">Histórico de Pedidos</a></li>
             
+            <?php if (esconderSeCliente()): ?>
+                <li><a href="consulta-movimentacao.php">Movimentações de Estoque</a></li>
+            <?php endif; ?>
+
             <?php if (mostrarSeCliente()): ?>
-                <li><a href="formulario-feedback.php">Enviar Feedback</a></li>
+                <li><a href="formulario-feedback.php">Enviar Feedback</a></li> <!-- Talvez não fique acessível por aqui -->
             <?php endif; ?>
             
-            <li><a href="consulta-feedback.php">Consulta de Feedback</a></li> <!-- Inserir aqui o caminho para a página de consulta (listagem) de feedbacks -->
+            <li><a href="consulta-feedback.php">Consulta de Feedback</a></li>
         </ul>
     </nav>
 

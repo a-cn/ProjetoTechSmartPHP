@@ -1,0 +1,114 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+h2 {
+    text-align: center;
+    margin: 20px 0 10px;
+}
+
+.msg-sucesso {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: #e8f5e9;
+    border-radius: 4px;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table {
+    width: 95%;
+    border-collapse: collapse;
+    background-color: white;
+    margin: 0 auto;
+    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #1976D2;
+    color: white;
+    position: sticky;
+    top: 0;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+.actions {
+    white-space: nowrap;
+}
+
+.actions button {
+    margin: 2px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.edit-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+.edit-btn:hover {
+    background-color: #e0a800;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.feedback-btn {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.feedback-btn:hover {
+    background-color: #138496;
+}
+
+.edit-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+select.edit-input {
+    padding: 7px;
+}

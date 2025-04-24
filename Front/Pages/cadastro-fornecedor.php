@@ -7,12 +7,9 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Importação do Bootstrap -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- Icones do FontAwesome -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> <!-- Icones do Bootstrap -->
-  <link rel="stylesheet" type="text/css" href="../CSS/cadastro-fornecedor.css">
   <title>TechSmart - Fornecedores</title>
+  <link rel="stylesheet" type="text/css" href="../CSS/cadastro-fornecedor.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
   <?php include 'sidebar-header.php'; ?> <!-- Inclui o cabeçalho e a barra de navegação -->
@@ -23,28 +20,28 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
     <!-- Formulário de Cadastro -->
     <div class="form-container">
       <h2>CADASTRAR FORNECEDOR</h2>
-      <form id="formFornecedor">
-        <label for="cnpj">CPF/CNPJ:</label>
-        <input type="text" id="cnpj" name="cnpj" placeholder="000.000.000-00 ou 00.000.000/0000-00" required>
+      <form id="formFornecedor" action="../../Back/cadastro_fornecedor.php" method="POST">
+        <label for="cpf_cnpj">CPF/CNPJ:</label>
+        <input type="text" id="cpf_cnpj" name="cpf_cnpj" placeholder="000.000.000-00 ou 00.000.000/0000-00" required>
 
         <label for="nome">Nome/Razão Social:</label>
         <input type="text" id="nome" name="nome" required>
 
         <label for="email">E-mail:</label>
-        <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required>
+        <input type="email" id="email" name="email" required>
 
         <label for="telefone">Telefone (com DDD):</label>
-        <input type="text" id="telefone" name="telefone" placeholder="(00) 0000-0000">
+        <input type="text" id="telefone" name="num_principal" placeholder="(00) 0000-0000">
 
         <label for="celular">Celular (com DDD):</label>
-        <input type="text" id="celular" name="celular" placeholder="(00) 00000-0000">
+        <input type="text" id="celular" name="num_secundario" placeholder="(00) 00000-0000">
 
         <label for="cep">CEP:</label>
         <input type="text" id="cep" name="cep" placeholder="00000-000" required>
         <button type="button" id="buscarCep">Buscar CEP</button>
 
-        <label for="endereco">Endereço:</label>
-        <input type="text" id="endereco" name="endereco" required>
+        <label for="logradouro">Logradouro:</label>
+        <input type="text" id="logradouro" name="logradouro" required>
 
         <label for="numero">Número:</label>
         <input type="text" id="numero" name="numero" required>
@@ -82,9 +79,10 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
         <thead>
           <tr>
             <th>Selecionar</th>
-            <th>ID</th>
+            <th>CPF/CNPJ</th>
             <th>NOME</th>
             <th>ENDEREÇO</th>
+            <th>CONTATO</th>
             <th>SITUAÇÃO</th>
             <th>AÇÕES</th>
           </tr>
@@ -96,6 +94,7 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
       <button class="btn-imprimir" onclick="imprimirSelecionados()">Imprimir Selecionados</button>
     </div>
   </div>
+
+  <script src="../JavaScript/cadastro-fornecedor.js"></script>
 </body>
-<script src="../JavaScript/cadastro-fornecedor.js"></script>
 </html>

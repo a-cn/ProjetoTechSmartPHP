@@ -1,6 +1,6 @@
 -- INSERTS RANDOMIZADOS PARA TESTE
 -- Autora: Amanda Caetano Nasser
--- Última alteração em: 23/04/2025
+-- Última alteração em: 24/04/2025
 
 -- ENDERECO
 INSERT INTO Endereco VALUES
@@ -32,9 +32,9 @@ INSERT INTO Usuario VALUES (
 
 -- FORNECEDOR
 INSERT INTO Fornecedor VALUES
-('Samsung Brasil', '45678912300', '41999990000', NULL, 'samsung@fornecedores.com', 3, 'Ativo', 1),
-('Xiaomi Importados', '12345098765', '41988887766', NULL, 'xiaomi@fornecedores.com', 3, 'Ativo', 1),
-('Apple Distribuição', '78945612300', '41977776666', '41977770000', 'apple@fornecedores.com', 3, 'Ativo', 1);
+('Samsung Brasil', '45678912300', '41999990000', NULL, 'samsung@fornecedores.com', 3, 'ATIVO', 1),
+('Xiaomi Importados', '12345098765', '41988887766', NULL, 'xiaomi@fornecedores.com', 3, 'ATIVO', 1),
+('Apple Distribuição', '78945612300', '41977776666', '41977770000', 'apple@fornecedores.com', 3, 'ATIVO', 1);
 
 -- COMPONENTE
 INSERT INTO Componente VALUES
