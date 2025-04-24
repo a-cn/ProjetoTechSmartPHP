@@ -1,3 +1,7 @@
+<?php
+require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários logados possam acessar a página
+?>
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -16,6 +20,7 @@
         <form id="searchForm">
             <input type="text" id="searchInput" placeholder="Pesquisar por nome, CPF/CNPJ, ou e-mail">
             <button type="submit">Pesquisar</button>
+            <a href="cadastro-usuario.php" class="btn-incluir">Cadastrar Colaborador</a>
         </form>
     </div>
 
@@ -74,9 +79,6 @@
             <button type="button" onclick="fecharModal()">Cancelar</button>
         </form>
     </div>
-
-   
-
 
     <script>
     // Elementos DOM
@@ -435,6 +437,5 @@
     });
 </script>
 
-    
 </body>
 </html>
