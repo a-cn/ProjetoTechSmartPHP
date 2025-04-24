@@ -1,11 +1,10 @@
 -- SCRIPTS PARA:
 -- > Criação de credenciais para o banco de dados (responsável por conectá-lo ao back-end);
 -- > Criação do banco de dados e tabelas do projeto ("TechSmartDB");
--- > Insert de endereço de teste na tabela "Endereco";
--- > Insert de usuários de teste na tabela "Usuario", com senha criptografada.
+-- > Inserts de dados padronizados nas tabelas "Tipo_Usuario" e "Pergunta_Seguranca".
 
 -- Autora: Amanda Caetano Nasser
--- Última alteração em: 11/04/2025
+-- Última alteração em: 24/04/2025
 
 
 USE master; -- Acessa o banco de dados "master"
@@ -86,10 +85,6 @@ CREATE TABLE Endereco (
 );
 GO
 
-INSERT INTO Endereco VALUES	-- Insere registros de endereço na tabela "Endereco" a fim de testar o acesso de usuários no sistema, pois o endereço é obrigatório no cadastro
-	('80010000', 'Rua XV de Novembro', 123, 'Ap 302', 'Centro', 'Curitiba', 'Paraná');
-GO
-
 -- ================================================================================
 -- 3) Tabela: Pergunta_Seguranca
 -- Armazena as perguntas de segurança para a redefinição de senha.
@@ -143,10 +138,6 @@ CREATE TABLE Usuario (
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 );
-GO
-
-INSERT INTO Usuario VALUES	-- Insere um usuário do tipo Administrador na tabela "Usuario" a fim de testar o acesso ao sistema. A senha foi criptografada, sendo que estes hashes em específico equivalem à senha "Admin123!" e à resposta "Lasanha", respectivamente
-	(1, 'Admin Teste', '09841489902', '2000-03-04', 'teste_admin@gmail.com', '41998136537', null, 1, '$2b$12$.zzAIFmixN.etmcsplEtqOiw8Eq8CnQpdM1UVzYy99G394di9L6c2', 1, '543f0e64795b37f1bf39acbcb64d8c09676849ff8d4091ca772c869714dd5980', 1);
 GO
 
 -- ================================================================================
