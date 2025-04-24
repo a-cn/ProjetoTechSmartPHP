@@ -25,7 +25,7 @@ try {
             FROM Usuario u
             JOIN Endereco e ON u.fk_endereco = e.endereco_id
             JOIN Tipo_Usuario tu ON u.fk_tipo_usuario = tu.tipo_usuario_id
-            WHERE 1=1";
+            WHERE u.ativo = 1";
     
     $params = [];
     

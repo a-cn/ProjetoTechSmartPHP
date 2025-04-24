@@ -230,21 +230,33 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
             'Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.'
         );
         
-        if (confirmed) {
-            try {
-                // Adiciona à lista de arquivados
-                if (!arquivados.includes(usuarioId)) {
-                    arquivados.push(usuarioId);
-                    localStorage.setItem('usuariosArquivados', JSON.stringify(arquivados));
-                }
-                
-                showAlert('success', 'Usuário excluído com sucesso!');
-                carregarUsuarios(searchInput.value);
-            } catch (error) {
-                console.error('Erro ao arquivar usuário:', error);
-                showAlert('error', 'Erro ao excluir usuário.');
-            }
-        }
+		if (confirmed) {
+			try {
+				fetch('../../Back/arquivar_usuario.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({ usuario_id: usuarioId })
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						showAlert('success', 'Usuário arquivado com sucesso!');
+						carregarUsuarios(searchInput.value);
+					} else {
+						showAlert('error', 'Erro ao arquivar usuário.');
+					}
+				})
+				.catch(error => {
+					console.error('Erro na requisição:', error);
+					showAlert('error', 'Erro ao arquivar usuário.');
+				});
+			} catch (error) {
+				console.error('Erro inesperado:', error);
+				showAlert('error', 'Erro ao arquivar usuário.');
+			}
+		}
     }
 
     // Funções auxiliares de formatação
@@ -279,10 +291,10 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
     }
 
     function formatarPermissao(value) {
-    // Como agora recebemos o texto diretamente (Administrador, Colaborador, Cliente)
-    // Podemos retornar o próprio valor ou fazer mapeamentos adicionais se necessário
-    return value || 'Não Informado';
-}
+		// Como agora recebemos o texto diretamente (Administrador, Colaborador, Cliente)
+		// Podemos retornar o próprio valor ou fazer mapeamentos adicionais se necessário
+		return value || 'Não Informado';
+	}
 
     // Função para mostrar alertas
     function showAlert(type, message) {
