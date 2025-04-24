@@ -1,30 +1,31 @@
 -- INSERTS RANDOMIZADOS PARA TESTE
--- Criação: 16/04/2025
+-- Autora: Amanda Caetano Nasser
+-- Última alteração em: 23/04/2025
 
--- ENDERECO (IDs 4, 5 e 6)
+-- ENDERECO
 INSERT INTO Endereco VALUES
 ('80020000', 'Rua das Palmeiras', 456, 'Casa', 'Batel', 'Curitiba', 'Paraná'),
 ('80030000', 'Avenida Brasil', 789, NULL, 'Água Verde', 'Curitiba', 'Paraná'),
 ('80040000', 'Rua Marechal', 321, 'Bloco B', 'Cristo Rei', 'Curitiba', 'Paraná');
 
--- USUARIO (IDs 4, 5 e 6)
+-- USUARIO
 -- Senha: Carlos@123 | Resposta: Pizza123
 INSERT INTO Usuario VALUES (
-    2, 'Carlos Eduardo', '12345678901', '1995-05-10', 'carlos.edu@gmail.com', '41999998888', '41988887777', 4,
+    1, 'Carlos Eduardo', '12345678901', '1995-05-10', 'carlos.edu@gmail.com', '41999998888', '41988887777', 1,
     '$2b$12$QmKMbCWY4coE.QLnHX/M5eIZXFfyY3yAcLms.NzPyJLgMu11gW1KC', 3,
     '858a44e789c923fe5d2594f8996b621ab73e3293d960a7fc0e98194eb8b60499', 1
 );
 
 -- Senha: F3r@Lima90 | Resposta: Verde@98
 INSERT INTO Usuario VALUES (
-    2, 'Fernanda Lima', '98765432100', '1990-09-21', 'fernanda.lima@gmail.com', '41997654321', NULL, 5,
+    2, 'Fernanda Lima', '98765432100', '1990-09-21', 'fernanda.lima@gmail.com', '41997654321', NULL, 2,
     '$2b$12$B8KSc7U5WQhw9.vMF1Yt3OU9UfrugCuHHZi7raGZjC4DxruaWvcHK', 3,
     '66085f88bdf8adde16d3ed2e4b22ca178ffde6832df020f60f25b6e6a86cb53f', 1
 );
 
 -- Senha: Joao123!@# | Resposta: Rex#2020
 INSERT INTO Usuario VALUES (
-    2, 'João Pedro Silva', '11223344556', '2002-12-01', 'joao.pedro@hotmail.com', '41991231234', NULL, 6,
+    3, 'João Pedro Silva', '11223344556', '2002-12-01', 'joao.pedro@hotmail.com', '41991231234', NULL, 3,
     '$2b$12$3Vc/lW7fecVE1TmagwacoeMmFEfdzGINZPwGoifumiqcpQCUNO2Ui', 3,
     'f29e8c02927096297eea5fdf7095591f570cb8755c7ffcde77ab54f25155cad1', 1
 );
@@ -40,6 +41,12 @@ INSERT INTO Componente VALUES
 ('Tela AMOLED 6.5"', 'Full HD+', 300, 50, 800, 1),
 ('Processador Snapdragon 888', 'Octa-core 5nm', 150, 30, 300, 1),
 ('Bateria 5000mAh', 'Lítio polímero', 500, 100, 1000, 1);
+
+-- FORNECEDOR_COMPONENTE
+INSERT INTO Fornecedor_Componente VALUES
+(1, 1, 560.00),
+(2, 2, 780.00),
+(3, 3, 220.00);
 
 -- PRODUCAO
 INSERT INTO Producao VALUES
@@ -62,12 +69,13 @@ INSERT INTO ProdutoFinal VALUES
 -- PEDIDO (usuário_id = 3)
 INSERT INTO Pedido VALUES
 (GETDATE(), 3, 2800.00, 'Aguardando pagamento', 1),
-(GETDATE(), 3, 950.00, 'Pago', 1),
+(GETDATE(), 3, 950.00, 'Em preparação', 1),
 (GETDATE(), 3, 1800.00, 'Cancelado', 1);
 
 -- PEDIDO_PRODUTOFINAL
 INSERT INTO Pedido_ProdutoFinal VALUES
 (1, 1, 1),
+(1, 2, 1),
 (2, 2, 1),
 (3, 3, 1);
 
@@ -77,14 +85,13 @@ INSERT INTO Feedback VALUES
 (GETDATE(), 2, 5, 'Produto excelente!', 1),
 (GETDATE(), 3, 2, 'Comprei errado e precisei cancelar', 1);
 
--- MOVIMENTACAO
+/* MOVIMENTACAO
 INSERT INTO Movimentacao VALUES
+(GETDATE(), 'Entrada', NULL, 1, 50),
+(GETDATE(), 'Entrada', NULL, 2, 80),
+(GETDATE(), 'Entrada', NULL, 3, 30),
 (GETDATE(), 'Saída', 1, 1, 1),
+(GETDATE(), 'Saída', 1, 2, 1),
 (GETDATE(), 'Saída', 2, 2, 1),
-(GETDATE(), 'Entrada', NULL, 3, 15);
-
--- FORNECEDOR_COMPONENTE
-INSERT INTO Fornecedor_Componente VALUES
-(1, 1, 560.00),
-(2, 2, 780.00),
-(3, 3, 220.00);
+(GETDATE(), 'Saída', 3, 3, 1);
+*/
