@@ -1,5 +1,6 @@
-let producaoEditando = null;
-let componentesDisponiveis = [];
+// Variáveis globais
+let producaoEditando = null; // Armazena a produção sendo editada
+let componentesDisponiveis = []; // Armazena os componentes disponíveis
 
 // Carrega componentes ao iniciar
 document.addEventListener('DOMContentLoaded', async function() {
@@ -45,9 +46,10 @@ async function listarProducoes() {
           const itemData = {
               id: item.id,
               tipo: item.tipo,
-              etapas: item.etapas_json // Usamos o JSON para edição
+              etapas: item.etapas_json // JSON para edição
           };
           
+          // Preenche as células da tabela
           tr.innerHTML = `
               <td>${item.id}</td>
               <td>${item.tipo}</td>
@@ -131,12 +133,13 @@ async function salvarProducao() {
         const tipo = getElementOrThrow('tipoProducao').value.trim();
         const qtd = parseInt(getElementOrThrow('quantidadeEtapas').value);
         
+        // Validações
         if (!tipo || isNaN(qtd) || qtd <= 0) {
             alert("Preencha o tipo de produção e uma quantidade válida de etapas!");
             return;
         }
 
-        // Coletar etapas com componentes
+        // Coleta etapas com componentes
         const etapas = [];
         for (let i = 1; i <= qtd; i++) {
             const nome = getElementOrThrow(`etapa_nome_${i}`).value.trim();
@@ -183,7 +186,7 @@ async function salvarProducao() {
 // Função para editar produção
 function editarProducao(item) {
   try {
-      producaoEditando = item;
+      producaoEditando = item; // Armazena item sendo editado
       
       // Debug: mostrar dados recebidos
       console.log('Dados recebidos para edição:', item);
@@ -208,7 +211,7 @@ function editarProducao(item) {
       // Gerar campos de etapas
       gerarCamposEtapas();
       
-      // Preencher os campos após um pequeno delay
+      // Preencher os campos após um pequeno delay (para garantir que os campos existam)
       setTimeout(() => {
           etapas.forEach((etapa, index) => {
               try {
@@ -239,7 +242,7 @@ function editarProducao(item) {
   }
 }
 
-// Função auxiliar para debug - adicione no início do arquivo
+// Função auxiliar para debug
 function debugEdicao(item) {
   console.log('Dados recebidos para edição:', item);
   console.log('Tipo:', typeof item.etapas, 'Valor:', item.etapas);
@@ -350,6 +353,7 @@ function limparCampos() {
         getElementOrThrow('quantidadeEtapas').value = '';
         getElementOrThrow('containerEtapas').innerHTML = '';
         
+        // Restaura o botão para modo de salvar
         const btnSalvar = document.querySelector('.btn-incluir');
         if (btnSalvar) {
             btnSalvar.textContent = 'Salvar';
@@ -360,4 +364,4 @@ function limparCampos() {
     } catch (error) {
         console.error("Erro ao limpar campos:", error);
     }
-}
+} 

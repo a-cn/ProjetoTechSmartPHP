@@ -11,7 +11,7 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
   <link rel="stylesheet" type="text/css" href="../CSS/cadastro-producao.css">
 </head>
 <body>
-  <?php include 'sidebar-header.php'; ?> <!-- Inclui o cabeçalho e a barra de navegação -->
+  <?php include 'sidebar-header.php'; ?> 
   <div class="container">
     <h2 class="titulo-fornecedores">Cadastro de Produção</h2>
 
@@ -19,7 +19,7 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
       <label for="tipoProducao">Tipo de Produção:</label>
       <input type="text" id="tipoProducao" placeholder="Digite o tipo de produção" />
 
-      <label for="quantidadeEtapas">Quantidade de Etapas:</label>
+      <label for="quantidadeEtapas">Quantidade de Etapas:</label><!-- Container dinâmico para as etapas -->
       <input type="number" id="quantidadeEtapas" min="1" placeholder="Digite a quantidade de etapas" oninput="gerarCamposEtapas()" />
 
       <div id="containerEtapas"></div>
@@ -40,11 +40,11 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
             <th>AÇÕES</th>
           </tr>
         </thead>
-        <tbody></tbody> 
+        <tbody></tbody> <!-- Corpo da tabela será preenchido dinamicamente -->
       </table>
     </div>
   </div>
 
   <script src="../JavaScript/cadastro-producao.js"></script>
 </body>
-</html>
+</html> 

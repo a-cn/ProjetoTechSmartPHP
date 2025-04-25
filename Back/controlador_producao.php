@@ -1,13 +1,14 @@
 <?php
 include 'conexao_sqlserver.php';
 
-header('Content-Type: application/json');
+header('Content-Type: application/json'); // Define cabeçalho para resposta JSON
 
-$acao = $_GET['acao'] ?? '';
+$acao = $_GET['acao'] ?? ''; // Obtém ação a ser executada
 
 try {
     switch ($acao) {
         case 'listar':
+            // Consulta SQL para listar produções com suas etapas
             $sql = "SELECT 
                     p.producao_id as id, 
                     p.nome as tipo,
@@ -39,10 +40,10 @@ try {
         
         $producoes = [];
         while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
-            // Formatar para exibição
+            // Formata para exibição
             $row['etapas'] = $row['etapas'] ?: 'Sem etapas cadastradas';
             
-            // Manter o JSON para edição
+            // Mantem o JSON para edição
             $row['etapas_json'] = $row['etapas_json'] ? '[' . $row['etapas_json'] . ']' : '[]';
             $producoes[] = $row;
         }
@@ -51,6 +52,7 @@ try {
         break;
 
         case 'incluir':
+            // Processa inclusão de nova produção
             $json = file_get_contents('php://input');
             $data = json_decode($json, true);
             
@@ -69,13 +71,13 @@ try {
                 throw new Exception("Nenhuma etapa informada");
             }
 
-            // Iniciar transação
+            // Inicia transação
             if (sqlsrv_begin_transaction($conn) === false) {
                 throw new Exception("Não foi possível iniciar a transação");
             }
 
             try {
-                // Inserir produção
+                // Insere produção
                 $sqlProducao = "INSERT INTO Producao (nome) OUTPUT INSERTED.producao_id VALUES (?)";
                 $params = array($tipo);
                 $stmtProducao = sqlsrv_query($conn, $sqlProducao, $params);
@@ -90,7 +92,7 @@ try {
                 
                 $producao_id = sqlsrv_get_field($stmtProducao, 0);
                 
-                // Inserir etapas com componentes
+                // Insere etapas com componentes
                 foreach ($etapas as $index => $etapa) {
                     $ordem = $index + 1;
                     $sqlEtapa = "INSERT INTO Etapa_Producao (fk_producao, ordem, nome, fk_componente) 
@@ -120,6 +122,7 @@ try {
             break;
 
         case 'editar':
+            // Processa edição de produção existente
             $json = file_get_contents('php://input');
             $data = json_decode($json, true);
             
@@ -139,13 +142,13 @@ try {
                 throw new Exception("Tipo de produção não informado");
             }
         
-            // Iniciar transação
+            // Inicia transação
             if (sqlsrv_begin_transaction($conn) === false) {
                 throw new Exception("Não foi possível iniciar a transação");
             }
         
             try {
-                // 1. Atualizar o nome da produção
+                // 1. Atualiza o nome da produção
                 $sqlProducao = "UPDATE Producao SET nome = ? WHERE producao_id = ?";
                 $params = array($tipo, $id);
                 $stmtProducao = sqlsrv_query($conn, $sqlProducao, $params);
@@ -154,7 +157,7 @@ try {
                     throw new Exception("Erro ao atualizar produção: " . print_r(sqlsrv_errors(), true));
                 }
         
-                // 2. Obter etapas existentes
+                // 2. Obtem etapas existentes
                 $sqlEtapasExistentes = "SELECT etapa_producao_id, ordem FROM Etapa_Producao 
                                         WHERE fk_producao = ? AND ativo = 1
                                         ORDER BY ordem";
@@ -169,12 +172,12 @@ try {
                     $etapasExistentes[$row['ordem']] = $row['etapa_producao_id'];
                 }
         
-                // 3. Processar cada etapa enviada
+                // 3. Processa cada etapa enviada
                 foreach ($etapas as $index => $etapa) {
                     $ordem = $index + 1;
                     
                     if (isset($etapasExistentes[$ordem])) {
-                        // Etapa existe - atualizar
+                        // Etapa existe - atualiza
                         $sqlAtualizar = "UPDATE Etapa_Producao 
                                         SET nome = ?, fk_componente = ?
                                         WHERE etapa_producao_id = ?";
@@ -190,10 +193,10 @@ try {
                             throw new Exception("Erro ao atualizar etapa $ordem: " . print_r(sqlsrv_errors(), true));
                         }
                         
-                        // Remover da lista de etapas existentes
+                        // Remove da lista de etapas existentes
                         unset($etapasExistentes[$ordem]);
                     } else {
-                        // Etapa não existe - inserir nova
+                        // Etapa não existe - insere nova
                         $sqlInserir = "INSERT INTO Etapa_Producao (fk_producao, ordem, nome, fk_componente) 
                                         VALUES (?, ?, ?, ?)";
                         $paramsInserir = array(
@@ -236,19 +239,20 @@ try {
         break;
 
         case 'excluir':
+            // Processa exclusão (soft delete) de produção
             $id = $_GET['id'] ?? 0;
             
             if (empty($id)) {
                 throw new Exception("ID da produção não informado");
             }
             
-            // Iniciar transação
+            // Inicia transação
             if (sqlsrv_begin_transaction($conn) === false) {
                 throw new Exception("Não foi possível iniciar a transação");
             }
 
             try {
-                // 1. Marcar produção como inativa
+                // 1. Marca produção como inativa
                 $sqlProducao = "UPDATE Producao SET ativo = 0 WHERE producao_id = ?";
                 $stmtProducao = sqlsrv_query($conn, $sqlProducao, array($id));
                 
@@ -256,7 +260,7 @@ try {
                     throw new Exception("Erro ao excluir produção: " . print_r(sqlsrv_errors(), true));
                 }
 
-                // 2. Marcar etapas como inativas
+                // 2. Marca etapas como inativas
                 $sqlEtapas = "UPDATE Etapa_Producao SET ativo = 0 WHERE fk_producao = ?";
                 $stmtEtapas = sqlsrv_query($conn, $sqlEtapas, array($id));
                 
@@ -282,4 +286,4 @@ try {
     http_response_code(500);
     echo json_encode(["error" => $e->getMessage()]);
 }
-?>
+?> 
