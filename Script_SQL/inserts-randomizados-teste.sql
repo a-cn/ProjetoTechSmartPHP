@@ -1,6 +1,8 @@
 -- INSERTS RANDOMIZADOS PARA TESTE
 -- Autora: Amanda Caetano Nasser
--- Última alteração em: 24/04/2025
+-- Última alteração em: 25/04/2025
+
+USE TechSmartDB;
 
 -- ENDERECO: Inserção de registros de endereço na tabela "Endereco" a fim de testar o acesso de usuários no sistema, pois o endereço é obrigatório no cadastro
 INSERT INTO Endereco VALUES

@@ -41,7 +41,7 @@ if (!empty($_POST)){
 			if ($descricaoTipoUsuario === 'administrador' || $descricaoTipoUsuario === 'colaborador') {
                 header("Location: ../Front/Pages/cadastro-producao.php"); //TROCAR O CAMINHO QUANDO ESTIVER ADEQUADO
             } elseif ($descricaoTipoUsuario === 'cliente') {
-                header("Location: ../Front/Pages/historico_pedidos.php"); //TROCAR O CAMINHO QUANDO ESTIVER ADEQUADO
+                header("Location: ../Front/Pages/perfil-usuario.php");
             } else {
                 echo "Tipo de usuário não reconhecido.";
             }

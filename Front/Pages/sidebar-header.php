@@ -38,7 +38,7 @@ $loginTimestamp = $_SESSION['login_timestamp'] ?? null;
                 <li><a href="dashboard.php">Dashboard</a></li> <!-- Inserir aqui o caminho para a página de relatórios do sistema -->
             <?php endif; ?>
 
-            <li><a href="dados-usuario.php">Minha Conta</a></li> <!-- Inserir aqui o caminho para a página de dados do usuário (perfil) -->
+            <li><a href="perfil-usuario.php">Minha Conta</a></li>
             
             <?php if (mostrarSeAdmin()): ?>
                 <li><a href="listagem-usuarios.php">Usuários</a></li>
