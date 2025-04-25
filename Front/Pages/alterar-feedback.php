@@ -31,11 +31,11 @@ if (isset($_GET['pedido_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="../CSS/formulario-feedback.css">
-    <title>Editar Feedback</title>
+    <title>Visualizar Feedback</title>
 </head>
 <body>
     <?php include 'sidebar-header.php'; ?> <!-- Cabeçalho e barra lateral -->
-    <header>Editar Feedback</header>
+    <header>Visualizar Feedback</header>
 
     <form action="../../Back/atualizar_feedback.php" method="POST">
         <input type="hidden" name="feedback_id" value="<?php echo htmlspecialchars($row['feedback_id']); ?>">
@@ -61,7 +61,8 @@ if (isset($_GET['pedido_id'])) {
 </html>
 <?php
     } else {
-        echo "Registro não encontrado.";
+        //Redireciona com um alerta
+        echo "<script>alert('Registro não encontrado.'); window.location.href = 'historico_pedidos.php';</script>";
     }
 
     sqlsrv_free_stmt($stmt);

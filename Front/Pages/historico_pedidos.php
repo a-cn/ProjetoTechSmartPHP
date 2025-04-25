@@ -58,7 +58,7 @@ if ($stmt === false) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Histórico de Pedidos - TechSmart</title>
+    <title>Histórico de Pedidos</title>
     <link rel="stylesheet" type="text/css" href="../CSS/sidebar-header.css">
     <link rel="stylesheet" type="text/css" href="../CSS/historico_pedidos.css">
     <!-- Removida a linha que tentava carregar o JS externo -->
@@ -68,7 +68,7 @@ if ($stmt === false) {
 <?php include 'sidebar-header.php'; ?> <!-- Inclui o cabeçalho e a barra de navegação -->
 
 <main>
-    <h2>Lista de Pedidos</h2>
+    <h2>Histórico de Pedidos</h2>
 
     <?php if (isset($_GET['success'])): ?>
         <div class="msg-sucesso">

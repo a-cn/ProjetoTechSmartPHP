@@ -62,7 +62,7 @@ $loginTimestamp = $_SESSION['login_timestamp'] ?? null;
             
             <li><a href="historico_pedidos.php">Histórico de Pedidos</a></li>
 
-            <li><a href="consulta-feedback.php">Consulta de Feedback</a></li>
+            <li><a href="consulta-feedback.php">Feedbacks Registrados</a></li>
 
             <?php if (esconderSeCliente()): ?>
                 <li><a href="consulta-movimentacao.php">Movimentações de Estoque</a></li>
