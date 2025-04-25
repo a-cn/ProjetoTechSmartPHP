@@ -1,17 +1,8 @@
 <?php
-// Conexão com o banco de dados
-$serverName = "GUSTAVO\SQLEXPRESS";
-$connectionInfo = array(
-    "Database" => "TechSmartDB",
-    "UID" => "techsmart_user",
-    "PWD" => "Teste123!",
-    "CharacterSet" => "UTF-8"
-);
-$conn = sqlsrv_connect($serverName, $connectionInfo);
-
-if (!$conn) {
-    die("Erro na conexão: " . print_r(sqlsrv_errors(), true));
-}
+require_once '../../Back/conexao_sqlserver.php'; //Chama a conexão com o banco de dados
+require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários logados possam acessar a página
+$tipo_usuario = $_SESSION['tipo_usuario']; //Identifica o tipo de usuário na sessão: administrador, colaborador ou cliente
+$usuario_id = $_SESSION['usuario_id']; //Captura o id do usuário para validar se o cliente já deu feedback
 
 // Processa atualizações de situação via POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pedido_id'], $_POST['situacao'])) {
@@ -64,12 +55,9 @@ if ($stmt === false) {
     <link rel="stylesheet" type="text/css" href="../CSS/historico_pedidos.css">
     <!-- Removida a linha que tentava carregar o JS externo -->
 </head>
-<body>
 
-<header class="topbar">
-    <div class="menu-icon" onclick="toggleSidebar()">☰</div>
-    <span class="logo">TechSmart</span>
-</header>
+<body>
+<?php include 'sidebar-header.php'; ?> <!-- Inclui o cabeçalho e a barra de navegação -->
 
 <main>
     <h2>Lista de Pedidos</h2>
@@ -102,7 +90,7 @@ if ($stmt === false) {
                     </td>
                     <td><?= $row['pedido_id'] ?></td>
                     <td><?= htmlspecialchars($row['cpf_cnpj']) ?></td>
-                    <td><?= $row['data_hora']->format('d/m/Y H:i') ?></td>
+                    <td><?= $row['data_hora']->format('d/m/Y, H:i:s') ?></td>
                     <td class="situacao-cell"><?= htmlspecialchars($row['situacao']) ?></td>
                     <td>R$ <?= number_format($row['valor_total'], 2, ',', '.') ?></td>
                 </tr>
@@ -121,8 +109,8 @@ function enableEdit(pedidoId) {
     // Substitui a situação por um select
     row.querySelector('.situacao-cell').innerHTML = `
         <select class="situacao-select" id="select-${pedidoId}">
-            <option value="Pendente" ${situacao === 'Pendente' ? 'selected' : ''}>Pendente</option>
-            <option value="Em processamento" ${situacao === 'Em processamento' ? 'selected' : ''}>Processando</option>
+            <option value="Aguardando pagamento" ${situacao === 'Aguardando pagamento' ? 'selected' : ''}>Aguardando pagamento</option>
+            <option value="Em preparação" ${situacao === 'Em preparação' ? 'selected' : ''}>Em preparação</option>
             <option value="Enviado" ${situacao === 'Enviado' ? 'selected' : ''}>Enviado</option>
             <option value="Entregue" ${situacao === 'Entregue' ? 'selected' : ''}>Entregue</option>
             <option value="Cancelado" ${situacao === 'Cancelado' ? 'selected' : ''}>Cancelado</option>
@@ -171,10 +159,32 @@ function saveChanges(pedidoId) {
     });
 }
 
-// Função para visualizar feedback (simulada)
+// Função para visualizar feedback referente ao pedido:
+// Se for Admnistrador ou Colaborador, verá um pop-up contendo o feedback.
+// Se for Cliente, será redirecionado para visualizar/editar feedback existente ou preencher o formulário.
 function viewFeedback(pedidoId) {
-    alert(`Visualizar feedback do pedido ${pedidoId}`);
-    // Implementação real redirecionaria para feedback.php?pedido_id=X
+    const tipoUsuario = "<?= $_SESSION['tipo_usuario'] ?>";
+    const usuarioId = "<?= $_SESSION['usuario_id'] ?>";
+
+    if (tipoUsuario === "administrador" || tipoUsuario === "colaborador") {
+        // Mostra pop-up com feedback do pedido
+        window.open(`popup-feedback.php?pedido_id=${pedidoId}`, 'popupFeedback', 'width=600,height=400');
+    } else if (tipoUsuario === "cliente") {
+        // Chama backend para verificar se feedback já foi feito
+        fetch(`../../Back/verifica_feedback.php?pedido_id=${pedidoId}&usuario_id=${usuarioId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.existe) {
+                    window.location.href = `alterar-feedback.php?pedido_id=${pedidoId}`;
+                } else {
+                    window.location.href = `formulario-feedback.php?pedido_id=${pedidoId}`;
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao verificar feedback:', error);
+                alert('Erro ao verificar se o feedback já foi feito.');
+            });
+    }
 }
 </script>
 

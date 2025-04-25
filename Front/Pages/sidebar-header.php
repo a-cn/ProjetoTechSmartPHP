@@ -61,16 +61,16 @@ $loginTimestamp = $_SESSION['login_timestamp'] ?? null;
             <?php endif; ?>
             
             <li><a href="historico_pedidos.php">Histórico de Pedidos</a></li>
-            
-            <?php if (esconderSeCliente()): ?>
-                <li><a href="consulta-movimentacao.php">Movimentações de Estoque</a></li>
-            <?php endif; ?>
 
             <?php if (mostrarSeCliente()): ?>
                 <li><a href="formulario-feedback.php">Enviar Feedback</a></li> <!-- Talvez não fique acessível por aqui -->
             <?php endif; ?>
             
             <li><a href="consulta-feedback.php">Consulta de Feedback</a></li>
+
+            <?php if (esconderSeCliente()): ?>
+                <li><a href="consulta-movimentacao.php">Movimentações de Estoque</a></li>
+            <?php endif; ?>
         </ul>
     </nav>
 

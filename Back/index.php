@@ -31,6 +31,7 @@ if (!empty($_POST)){
 		if (password_verify($senha, $rowUsuario['senha'])){
 			//Cria a sessão e guarda os dados do usuário na sessão
 			session_start();
+			$_SESSION['usuario_id'] = $rowUsuario['usuario_id'];
             $_SESSION['email'] = $rowUsuario['email'];
             $_SESSION['nome'] = $rowUsuario['nome'];
             $_SESSION['tipo_usuario'] = $descricaoTipoUsuario; //Já está em minúsculas (convertido anteriormente)

@@ -7,6 +7,7 @@ require_once 'valida_campo_obrigatorio_back.php'; //Chama a função para valida
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     //Captura os dados do formulário
+    $fk_pedido = $_POST["fk_pedido"] ?? null; //Recebido via campo oculto no formulário
     $avaliacao = campoObrigatorio('avaliacao', 'Avaliação');
     $observacao = $_POST['observacao'] ?? null; //Pode ser nulo
     $ativo = 1; //Coluna "ativo" do banco deve ser sempre 1 por padrão
