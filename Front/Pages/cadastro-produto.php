@@ -1,76 +1,123 @@
 <?php
+require_once '../../Back/conexao_sqlserver.php'; //Chama o arquivo de conexão com o banco de dados
 require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários logados possam acessar a página
-?>
+
+// Função para conectar ao banco de dados SQL Server TechSmartDB
+// function conecta_database($serverName = "SQLSERVER\\SQLEXPRESS", $database = "TechSmartDB", $username = "techsmart_user", $password = "@Techsmart@") {
+/*
+    $connectionInfo = array( "Database"=>"TechSmartDB", "UID"=>"techsmart_user", "PWD"=>"@Techsmart@", "CharacterSet" => "UTF-8", "ReturnDatesAsStrings" => true, "MultipleActiveResultSets" => true, "Encrypt" => false, "TrustServerCertificate" => true);
+    $conn = sqlsrv_connect( "SQLSERVER\\SQLEXPRESS", $connectionInfo);
+    if( !$conn ) {
+	    echo "Connection could not be established.<br />";
+	    die( print_r( sqlsrv_errors(), false));
+    }  
+*/
+
+?>   
 
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Importação do Bootstrap -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"> <!-- Icones do FontAwesome -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> <!-- Icones do Bootstrap -->
-    <link rel="stylesheet" type="text/css" href="../CSS/cadastro-produto.css">
-    <title>Tela de Cadastro de Produtos - TechSmart</title>
+    <title>Cadastro de Produtos</title>
+    <link rel="stylesheet" type="text/css" href="../CSS/cadastro-produto.css">  <!-- Link para o arquivo CSS -->
 </head>
-
 <body>
-    <?php include 'sidebar-header.php'; ?> <!-- Inclui o cabeçalho e a barra de navegação -->
-
     <div class="container">
-        <h1>Tela de Cadastro de Produtos</h1>
-        <div class="form-container">
-            <div class="form-section">
-                <h2>Cadastro de Produto</h2>
-                <div class="form-item">
-                    <label for="tipo">Tipo:</label>
-                    <input type="text" id="tipo" name="tipo" placeholder="Digite o tipo do produto">
+        <div class="cadastro-produto">
+            <h2>Cadastro de Produto</h2>
+            <form id="cadastroForm" action="../../Back/cadastrar_produto.php" method="POST">
+                <div class="form-group">
+                    <label for="id">ID:</label>
+                    <input type="text" id="id" name="id" readonly>
                 </div>
-                
-                <div class="form-item">
+                <div class="form-group">
+                    <label for="nome">Nome:</label>
+                    <input type="text" id="nome" name="nome" required>
+                </div>
+                <div class="form-group">
                     <label for="descricao">Descrição:</label>
-                    <input type="text" id="descricao" name="descricao" placeholder="Digite a descrição do produto">
+                    <textarea id="descricao" name="descricao" rows="4"></textarea>
                 </div>
-                
-                <div class="form-item">
-                    <label for="valor">Valor:</label>
-                    <input type="number" id="valor" name="valor" placeholder="Digite o valor do produto">
-                </div>
-                
-                <div class="form-item">
+                <div class="form-group">
                     <label for="quantidade">Quantidade:</label>
-                    <input type="number" id="quantidade" name="quantidade" placeholder="Digite a quantidade">
+                    <input type="number" id="quantidade" name="quantidade" required>
                 </div>
-                
-                <div class="form-item">
-                    <label for="modelo">Modelo:</label>
-                    <input type="text" id="modelo" name="modelo" placeholder="Digite o modelo">
+                <div class="form-group">
+                    <label for="valor_venda">Valor:</label>
+                    <input type="text" id="valor_venda" name="valor_venda" step="0.01" required>
                 </div>
+                <input type="submit" class="btn-cadastrar" value="Salvar">
+            </form>
+        </div>
+        
+<?php
+    $sql = "SELECT [produtofinal_id],[descricao],[nome],[quantidade],[valor_venda],[nivel_minimo],[nivel_maximo] FROM [dbo].[ProdutoFinal]";
+    $stmt = sqlsrv_query($conn, $sql, [], ["Scrollable" => 'static']);
+    if ($stmt == false){
+        die( print_r( sqlsrv_errors(), false));
+    }   
+?>
 
-                <button id="btnCadastrar">Cadastrar</button>
+        <div class="produtos-cadastrados">
+            <h2>Produtos Cadastrados</h2>
+            <div class="pesquisa">
+                <input type="text" id="pesquisarProduto" placeholder="Pesquisar produto...">
+                <button class="btn-pesquisar">Pesquisar</button>
             </div>
+            <table id="tabelaProdutos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome</th>
+                        <th>Descricao</th>
+                        <th>Quantidade</th>
+                        <th>Valor</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Exemplo de dados estáticos, você pode substituir por dados dinâmicos do banco de dados -->
+                    <tr>
+                    <?php      
+  while( $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)){
+        print "<td contenteditable='true'>";
+        print($row['produtofinal_id']);
+        print "</td>";         
+        print "<td contenteditable='true'>";
+        print($row['nome']);
+        print "</td>";        
+        print "<td contenteditable='true'>";
+        print($row['descricao']);
+        print "</td>";        
+        print "<td contenteditable='true'>";
+        print($row['quantidade']);
+        print "</td>";
+        print "<td contenteditable='true'>";
+        print($row['valor_venda']);
+        print "</td>";
+/*        print "<td>";
+        print($row['nivel_minimo']);
+        print "</td>";
+        print "<td>";
+        print($row['nivel_maximo']);
+        print "</td>";*/
+        print "<td><button class='btn-editar'>Editar</button></td>";
+        print "</tr>";
+    }; 
 
-            <div class="list-section">
-                <h2>Tela de Consulta de Produtos Cadastrados</h2>
-                <table id="produtosTable">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Modelo</th>
-                            <th>Quantidade</th>
-                            <th>Situação</th>
-                            <th>Tipo</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Produtos serão inseridos aqui -->
-                    </tbody>
-                </table>
-            </div>
+    
+//    var_dump($row);
+
+    sqlsrv_free_stmt($stmt);
+?>
+
+                    <!-- Dados da tabela serão preenchidos com JavaScript -->
+                </tbody>
+            </table>
         </div>
     </div>
+    <!--script src="../JavaScript/cadastro-produto.js"></script>  < !-- Link para o arquivo JavaScript -->
 </body>
-<script src="../JavaScript/cadastro-produto.js"></script>
 </html>
