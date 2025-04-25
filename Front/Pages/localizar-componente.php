@@ -8,6 +8,7 @@ $resultados = [];
 $mensagem = '';
 
 // Processa a busca se houver termo
+// Processa a busca se houver termo
 if (!empty($termoBusca)) {
     try {
         $query = "SELECT c.componente_id, c.nome, c.especificacao, c.quantidade, 
@@ -17,15 +18,23 @@ if (!empty($termoBusca)) {
                   LEFT JOIN Fornecedor f ON fc.fk_fornecedor = f.fornecedor_id
                   WHERE c.nome LIKE ? AND c.ativo = 1
                   ORDER BY c.nome";
-        
-        $stmt = $conn->prepare($query);
-        $stmt->execute(['%' . $termoBusca . '%']);
-        $resultados = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
+
+        $params = ['%' . $termoBusca . '%'];
+        $stmt = sqlsrv_query($conn, $query, $params);
+
+        if ($stmt === false) {
+            throw new Exception("Erro ao buscar componentes: " . print_r(sqlsrv_errors(), true));
+        }
+
+        $resultados = [];
+        while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+            $resultados[] = $row;
+        }
+
         if (empty($resultados)) {
             $mensagem = "Nenhum componente encontrado com o termo '{$termoBusca}'";
         }
-    } catch (PDOException $e) {
+    } catch (Exception $e) {
         $mensagem = "Erro na busca: " . $e->getMessage();
     }
 }

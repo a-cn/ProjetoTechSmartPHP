@@ -21,47 +21,48 @@ if (isset($_SESSION['mensagem'])) {
 // Busca os fornecedores ativos do banco de dados
 try {
     // Verifica se a tabela Fornecedor existe
-    $check_table = $conn->query("
+    $check_table_query = "
         SELECT COUNT(*) AS table_exists 
         FROM INFORMATION_SCHEMA.TABLES 
         WHERE TABLE_NAME = 'Fornecedor'
-    ");
-    
-    if ($check_table === false) {
+    ";
+    $check_table_stmt = sqlsrv_query($conn, $check_table_query);
+
+    if ($check_table_stmt === false) {
         throw new Exception("Erro ao verificar a existência da tabela Fornecedor");
     }
-    
-    $table_exists = $check_table->fetch(PDO::FETCH_ASSOC)['table_exists'];
-    
+
+    $check_table_row = sqlsrv_fetch_array($check_table_stmt, SQLSRV_FETCH_ASSOC);
+    $table_exists = $check_table_row['table_exists'];
+
     if (!$table_exists) {
         throw new Exception("A tabela de fornecedores não está disponível no banco de dados.");
     }
 
     // Busca fornecedores ativos
     $query_fornecedores = "SELECT fornecedor_id, nome FROM Fornecedor WHERE ativo = 1 ORDER BY nome";
-    $stmt_fornecedores = $conn->query($query_fornecedores);
-    
+    $stmt_fornecedores = sqlsrv_query($conn, $query_fornecedores);
+
     if ($stmt_fornecedores === false) {
         throw new Exception("Erro ao buscar fornecedores");
     }
-    
-    $fornecedores = $stmt_fornecedores->fetchAll(PDO::FETCH_ASSOC);
-    
+
+    $fornecedores = [];
+    while ($row = sqlsrv_fetch_array($stmt_fornecedores, SQLSRV_FETCH_ASSOC)) {
+        $fornecedores[] = $row;
+    }
+
     if (empty($fornecedores)) {
         $mensagem = "Nenhum fornecedor cadastrado no sistema.";
         $mensagem_tipo = "aviso";
     }
-} catch (PDOException $e) {
-    $mensagem = "Erro ao acessar o banco de dados: " . $e->getMessage();
-    $mensagem_tipo = "erro";
-    $fornecedores = [];
 } catch (Exception $e) {
-    $mensagem = $e->getMessage();
+    $mensagem = "Erro ao acessar o banco de dados: " . $e->getMessage();
     $mensagem_tipo = "erro";
     $fornecedores = [];
 }
 
-// Processa o formulário
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['incluir'])) {
     $transactionStarted = false;
     try {
@@ -80,7 +81,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['incluir'])) {
         $nivel_max = intval($_POST['nivel-max']);
         $fornecedor_id = intval($_POST['fornecedor_id']);
 
-        // Validação adicional
         if ($nivel_max <= $nivel_min) {
             throw new Exception("O Nível Máximo deve ser maior que o Nível Mínimo!");
         }
@@ -93,39 +93,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['incluir'])) {
                 break;
             }
         }
-        
+
         if (!$fornecedor_valido) {
             throw new Exception("Fornecedor selecionado não é válido!");
         }
 
-        // Inicia a transação
-        $conn->beginTransaction();
+        // Inicia transação
+        if (!sqlsrv_begin_transaction($conn)) {
+            throw new Exception("Erro ao iniciar transação");
+        }
         $transactionStarted = true;
-        
-        // Insere o componente
-        $sql_componente = "INSERT INTO Componente (nome, especificacao, quantidade, nivel_minimo, nivel_maximo, ativo) 
-                          VALUES (?, ?, 0, ?, ?, 1)";
-        $stmt = $conn->prepare($sql_componente);
-        $stmt->execute([$nome, $descricao, $nivel_min, $nivel_max]);
-        
-        $componente_id = $conn->lastInsertId();
-        
-        // Inserção do relacionamento com fornecedor
-        $sql_relacionamento = "INSERT INTO Fornecedor_Componente (fk_fornecedor, fk_componente) 
-                             VALUES (?, ?)";
-        $stmt_rel = $conn->prepare($sql_relacionamento);
-        $stmt_rel->execute([$fornecedor_id, $componente_id]);
-        
-        $conn->commit();
-        
+
+        // Inserção do componente
+        $sql_componente = "INSERT INTO Componente (nome, especificacao, quantidade, nivel_minimo, nivel_maximo, ativo)
+                           OUTPUT INSERTED.componente_id
+                           VALUES (?, ?, 0, ?, ?, 1)";
+        $params_componente = [$nome, $descricao, $nivel_min, $nivel_max];
+        $stmt_comp = sqlsrv_query($conn, $sql_componente, $params_componente);
+
+        if ($stmt_comp === false) {
+            throw new Exception("Erro ao inserir componente: " . print_r(sqlsrv_errors(), true));
+        }
+
+        // Recupera ID inserido
+        $row = sqlsrv_fetch_array($stmt_comp, SQLSRV_FETCH_ASSOC);
+        $componente_id = $row['componente_id'];
+
+        // Relacionamento com fornecedor
+        $sql_rel = "INSERT INTO Fornecedor_Componente (fk_fornecedor, fk_componente) VALUES (?, ?)";
+        $params_rel = [$fornecedor_id, $componente_id];
+        $stmt_rel = sqlsrv_query($conn, $sql_rel, $params_rel);
+
+        if ($stmt_rel === false) {
+            throw new Exception("Erro ao inserir relacionamento: " . print_r(sqlsrv_errors(), true));
+        }
+
+        sqlsrv_commit($conn);
+
         $_SESSION['mensagem'] = "Componente cadastrado com sucesso!";
         $_SESSION['mensagem_tipo'] = "sucesso";
-        header("Location: ".$_SERVER['PHP_SELF']);
+        header("Location: " . $_SERVER['PHP_SELF']);
         exit();
-        
+
     } catch (Exception $e) {
-        if ($transactionStarted && $conn->inTransaction()) {
-            $conn->rollBack();
+        if ($transactionStarted) {
+            sqlsrv_rollback($conn);
         }
         $mensagem = $e->getMessage();
         $mensagem_tipo = "erro";
@@ -198,7 +210,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['incluir'])) {
                     <button type="submit" name="incluir" class="btn-primary">INCLUIR</button>
                     
                     <div class="action-buttons">
-                        <button type="button" onclick="window.location.href='localizar.php'" class="btn-secondary">LOCALIZAR</button>
+                        <button type="button" onclick="window.location.href='localizar-componente.php'" class="btn-secondary">LOCALIZAR</button>
                         <button type="button" onclick="mostrarMensagemImpressao()" class="btn-secondary">RELATÓRIO</button>
 						<script>
 							function mostrarMensagemImpressao() {
