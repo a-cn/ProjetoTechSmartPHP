@@ -40,7 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die( print_r( sqlsrv_errors(), false));
     } else {
         echo "<script>alert('Produto cadastrado com sucesso!');</script>";
-        header("Location: index.php"); // Redireciona para a página inicial após o cadastro
+        header("Location: ../Front/Pages/cadastro-produto.php"); // Redireciona para a página inicial após o cadastro
     }
 
     sqlsrv_free_stmt($stmt);

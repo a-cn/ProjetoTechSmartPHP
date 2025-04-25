@@ -12,7 +12,6 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
 	    die( print_r( sqlsrv_errors(), false));
     }  
 */
-
 ?>   
 
 <!DOCTYPE html>
@@ -24,6 +23,7 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
     <link rel="stylesheet" type="text/css" href="../CSS/cadastro-produto.css">  <!-- Link para o arquivo CSS -->
 </head>
 <body>
+    <?php include 'sidebar-header.php'; ?> <!-- Inclui o cabeçalho e a barra de navegação -->
     <div class="container">
         <div class="cadastro-produto">
             <h2>Cadastro de Produto</h2>
