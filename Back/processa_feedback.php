@@ -21,29 +21,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Erro: Avaliação inválida.");
     }
 
+    if ($observacao !== null && strlen($observacao) > 100) {
+        die("Erro: observação excede 100 caracteres.");
+    }    
+
     //Descobre o usuário logado por meio do e-mail
     $email = $_SESSION['email'] ?? null;
     if (!$email) {
         die("Erro: Sessão inválida.");
     }
-
-
     
     //Query para inserir o feedback no banco de dados
-    $sql_feedback = "INSERT INTO Feedback (data_hora, fk_pedido, avaliacao, observacao, ativo) VALUES (?, ?, ?, ?, ?)";
+    $sql_feedback = "INSERT INTO Feedback (data_hora, fk_pedido, avaliacao, observacao, ativo)
+                 VALUES (CONVERT(datetime, ?, 120), ?, ?, ?, ?)";
 
-    $params_feedback = [$data_hora, $fk_pedido, $avaliacao, $observacao, $ativo];
+    $params_feedback = [
+        $data_hora,            // string no formato ISO (yyyy-mm-dd hh:mi:ss)
+        (int)$fk_pedido,       // int
+        (int)$avaliacao,       // int
+        $observacao,           // string ou null
+        $ativo                 // int (bit)
+    ];
 
-    //Executa a query diretamente com sqlsrv_query
     $stmt_feedback = sqlsrv_query($conn, $sql_feedback, $params_feedback);
 
     if ($stmt_feedback === false) {
         echo "Erro ao registrar feedback: " . print_r(sqlsrv_errors(), true);
-    } else {
-        echo "Feedback registrado com sucesso!";
     }
 
     //Fecha a conexão
     sqlsrv_close($conn);
+
+    echo "<script>alert('Feedback registrado com sucesso!'); window.location.href = '../Front/Pages/historico_pedidos.php';</script>";
+    exit;
 }
 ?>

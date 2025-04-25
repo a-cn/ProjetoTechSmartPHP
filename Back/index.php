@@ -10,7 +10,7 @@ if (!empty($_POST)){
 	$senha = $login["senha"];
 	
 	//Procurar o usuário pelo email informado
-	$tsql = "SELECT [nome], [cpf_cnpj], [email], [senha], [fk_tipo_usuario] FROM dbo.Usuario WHERE [email] = ?";
+	$tsql = "SELECT [usuario_id], [nome], [cpf_cnpj], [email], [senha], [fk_tipo_usuario] FROM dbo.Usuario WHERE [email] = ?";
 	$getUsuario = sqlsrv_query($conn, $tsql, array($email), array( "Scrollable" => 'static' ));
 	$numUsuarios = sqlsrv_num_rows($getUsuario);
 	if ($numUsuarios > 0){
@@ -41,7 +41,7 @@ if (!empty($_POST)){
 			if ($descricaoTipoUsuario === 'administrador' || $descricaoTipoUsuario === 'colaborador') {
                 header("Location: ../Front/Pages/cadastro-producao.php"); //TROCAR O CAMINHO QUANDO ESTIVER ADEQUADO
             } elseif ($descricaoTipoUsuario === 'cliente') {
-                header("Location: ../Front/Pages/formulario-feedback.php"); //TROCAR O CAMINHO QUANDO ESTIVER ADEQUADO
+                header("Location: ../Front/Pages/historico_pedidos.php"); //TROCAR O CAMINHO QUANDO ESTIVER ADEQUADO
             } else {
                 echo "Tipo de usuário não reconhecido.";
             }

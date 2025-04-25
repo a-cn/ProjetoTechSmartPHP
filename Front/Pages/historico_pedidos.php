@@ -1,6 +1,8 @@
 <?php
 require_once '../../Back/conexao_sqlserver.php'; //Chama a conexão com o banco de dados
 require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários logados possam acessar a página
+require_once '../../Back/funcoes_sessao.php';
+
 $tipo_usuario = $_SESSION['tipo_usuario']; //Identifica o tipo de usuário na sessão: administrador, colaborador ou cliente
 $usuario_id = $_SESSION['usuario_id']; //Captura o id do usuário para validar se o cliente já deu feedback
 
@@ -36,8 +38,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pedido_id'], $_POST['
 $sql = "SELECT p.pedido_id, p.data_hora, p.situacao, p.valor_total, u.cpf_cnpj 
         FROM Pedido p 
         JOIN Usuario u ON p.fk_usuario = u.usuario_id 
-        WHERE p.ativo = 1
-        ORDER BY p.data_hora DESC";
+        WHERE p.ativo = 1";
+
+if(mostrarSeCliente()){
+	$sql .= " AND u.usuario_id = " . intval($usuario_id);
+}
+
+$sql .= " ORDER BY p.data_hora DESC";
+
 $stmt = sqlsrv_query($conn, $sql);
 
 if ($stmt === false) {
@@ -168,7 +176,7 @@ function viewFeedback(pedidoId) {
 
     if (tipoUsuario === "administrador" || tipoUsuario === "colaborador") {
         // Mostra pop-up com feedback do pedido
-        window.open(`popup-feedback.php?pedido_id=${pedidoId}`, 'popupFeedback', 'width=600,height=400');
+        window.location.href = `alterar-feedback.php?pedido_id=${pedidoId}`;
     } else if (tipoUsuario === "cliente") {
         // Chama backend para verificar se feedback já foi feito
         fetch(`../../Back/verifica_feedback.php?pedido_id=${pedidoId}&usuario_id=${usuarioId}`)
