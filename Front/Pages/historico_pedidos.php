@@ -92,7 +92,9 @@ if ($stmt === false) {
                 <?php while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)): ?>
                 <tr id="row-<?= $row['pedido_id'] ?>">
                     <td class="actions">
-                        <button type="button" class="edit-btn" onclick="enableEdit(<?= $row['pedido_id'] ?>)">Editar</button>
+                        <?php if (esconderSeCliente()): ?>
+                            <button type="button" class="edit-btn" onclick="enableEdit(<?= $row['pedido_id'] ?>)">Editar</button>
+                        <?php endif; ?>
                         <button type="button" class="save-btn" style="display:none" onclick="saveChanges(<?= $row['pedido_id'] ?>)">Salvar</button>
                         <button type="button" class="feedback-btn" onclick="viewFeedback(<?= $row['pedido_id'] ?>)">Feedback</button>
                     </td>
