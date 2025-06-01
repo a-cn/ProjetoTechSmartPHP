@@ -17,7 +17,7 @@ require_once '../../Back/verifica_sessao.php'; //Garante que somente usuários l
 
     <div class="form-container">
       <label for="tipoProducao">Tipo de Produção:</label>
-      <input type="text" id="tipoProducao" placeholder="Digite o tipo de produção" />
+      <input type="text" id="tipoProducao" maxlength="50" placeholder="Digite o tipo de produção" />
 
       <label for="quantidadeEtapas">Quantidade de Etapas:</label><!-- Container dinâmico para as etapas -->
       <input type="number" id="quantidadeEtapas" min="1" placeholder="Digite a quantidade de etapas" oninput="gerarCamposEtapas()" />
